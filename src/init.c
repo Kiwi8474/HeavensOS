@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <sys/mount.h>
 #include <stdio.h>
+#include <sys/reboot.h>
 
 void clear_screen() {
   write(STDOUT_FILENO, "\033[2J\033[H", 7);
@@ -46,10 +47,20 @@ int main() {
 
       // Falls Shell mit Exit-Code 0 beendet: System anhalten
       if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-        char msg3[] = "Halting system...\n";
+        char msg3[] = "Exiting system...\n";
         write(tty, msg3, strlen(msg3));
-        while (1) pause(); // System wird nicht beendet. CPU wartet auf ewig.
-    }
+        
+        // Den Kernel anweisen, sich ohne Kernel Panic auszuschalten.
+        reboot(RB_POWER_OFF);
+        
+        // Falls der Syscall fehlschlägt, gibt es eine Fehlermeldung
+        perror("reboot");
+        
+        // Und wir hängen in einer Endlosschleife, wenn der Reboot-Befehl fehlschlägt
+        while(1) {
+          pause();
+        }
+      }
 
     // Sonst einfach Shell neu starten
     } else {
