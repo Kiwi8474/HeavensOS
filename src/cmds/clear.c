@@ -3,7 +3,7 @@
 #include "../lib/fileutils.h"
 
 void clear_screen() {
-  printf("\033[3;1H"); // Cursor auf Zeile 3, Spalte 1
+  printf("\033[2;1H"); // Cursor auf Zeile 2, Spalte 1
   printf("\033[J"); // Alles ab hier löschen
 }
 
@@ -13,7 +13,7 @@ void fill_background() {
       printf(" ");
     }
   }
-  printf("\033[3;1H");
+  printf("\033[2;1H"); // Cursor auf Zeile 2, Spalte 1
 }
 
 int main(int argc, char *argv[]) {

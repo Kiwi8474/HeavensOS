@@ -1,0 +1,84 @@
+#!/bin/python
+import sys
+
+class Editor:
+    def __init__(self):
+        self.mode = "r"
+        self.modes = {
+            "r": self.read_file,
+            "w": self.write_file,
+            "a": self.append_file
+            }
+        self.file = sys.argv[1] if len(sys.argv) > 1 else None
+
+    def read_file(self):
+        try:
+            with open(self.file, "r") as f:
+                content = f.read()
+            header = "-"*10 + self.file + "-"*10
+            print(header)
+            print(content)
+            print("-"*len(header))
+        except Exception as e:
+            print(f"Nani Error: {e}")
+    
+    def write_file(self):
+        try:
+            with open(self.file, "r") as fr:
+                content = fr.read()
+            header = "-"*10 + self.file + "-"*10
+            print(header)
+            print(content)
+            print("-"*len(header))
+
+            lines = []
+            while True:
+                line = input("Nani (w)> ")
+                if line == "q":
+                    break
+                lines.append(line + "\n")
+
+            with open(self.file, "w") as fw:
+                for line in lines:
+                    fw.write(line)
+
+        except Exception as e:
+            print(f"Nani Error: {e}")
+    
+    def append_file(self):
+        try:
+            with open(self.file, "r") as fr:
+                content = fr.read()
+            header = "-"*10 + self.file + "-"*10
+            print(header)
+            print(content)
+            print("-"*len(header))
+
+            lines = []
+            while True:
+                line = input("Nani (a)> ")
+                if line == "q":
+                    break
+                lines.append(line + "\n")
+
+            with open(self.file, "a") as fa:
+                for line in lines:
+                    fa.write(line)
+
+        except Exception as e:
+            print(f"Nani Error: {e}")
+    
+    def execute(self):
+        while True:
+            mode_input = input("Mode (r/w/a/q): ")
+            if mode_input == "q":
+                break
+            
+            if mode_input in self.modes:
+                self.modes[mode_input]()
+            else:
+                print("Unknown mode.")
+
+if __name__ == "__main__":
+    editor = Editor()
+    editor.execute()

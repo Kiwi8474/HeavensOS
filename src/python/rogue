@@ -1,0 +1,32 @@
+#!/bin/python
+import os
+from roguelib.roguelib import Player, Dungeon
+
+if __name__ == "__main__":
+    player = Player()
+    player.x = 1
+    player.y = 1
+
+    dungeon = Dungeon()
+    dungeon.layout = [
+        [1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1]
+    ]
+    dungeon.convert()
+
+    running = True
+
+    while running:
+        dungeon.flip()
+
+        dungeon.draw(player.x, player.y)
+        move_input = input("rogue > ")
+        
+        if move_input == "q":
+            running = False
+            continue
+            
+        player.move(move_input, dungeon.layout)

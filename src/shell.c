@@ -19,7 +19,7 @@ void print_watermark(int tty, int first_time) {
   write(tty, buf, strlen(buf));
 
   if (first_time) {
-    write(tty, "\033[2;1H", 6);
+    write(tty, "\033[2;1H", 6); // Cursor auf Zeile 2, Spalte 1
   }
 }
 
@@ -89,12 +89,17 @@ int main() {
         pid_t pid = fork();
         if (pid == 0) {
             // Pfad zum Befehl vorbereiten
-            char path[256];
-            snprintf(path, sizeof(path), "/bin/%s", args[0]);
+            const char *paths[] = {"/bin/", "/usr/local/bin/", NULL};
+            int i = 0;
+            
+            while (paths[i] != NULL) {
+                char path[256];
+                snprintf(path, sizeof(path), "%s%s", paths[i], args[0]);
+                execv(path, args); // direkt args vom Elternprozess nutzen
+                i++;
+            }
 
-            execv(path, args); // direkt args vom Elternprozess nutzen
-            char msg3[] = "Unknown command.\n";
-            write(tty, msg3, strlen(msg3));
+            perror(args[0]);
             _exit(1);
         } else if (pid > 0) {
             int status;
